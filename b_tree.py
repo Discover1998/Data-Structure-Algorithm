@@ -28,31 +28,128 @@ class BinaryTree:
         print(self.data, end=" ")
 
     def sum_of_nodes(self):
-        pass
+        total = 0
+        if self.data is None:
+            return total
+        total += self.data
+
+        if self.left:
+            total += self.left.sum_of_nodes()
+
+        if self.right:
+            total += self.right.sum_of_nodes()
+        return total
 
     def count_negatives(self):
-        pass
+        counter = 0
+        if self is None:
+            return counter
+        if self.data < 0:
+            counter += 1
+        if self.left:
+            counter += self.left.count_negatives()
+
+        if self.right:
+            counter += self.right.count_negatives()
+        return counter
 
     def count_positives(self):
-        pass
+        counter = 0
+        if self is None:
+            return counter
+        if self.data > 0:
+            counter += 1
+        if self.left:
+            counter += self.left.count_positives()
+
+        if self.right:
+            counter += self.right.count_positives()
+        return counter
 
     def count_leaves(self):
-        pass
+        counter = 0
+        if self is None:
+            return counter
+        if not self.left and not self.right:
+            counter += 1
+        if self.left:
+            counter += self.left.count_leaves()
+        if self.right:
+            counter +=  self.right.count_leaves()
+
+        return counter
 
     def count_parents(self):
-        pass
+        counter = 0
+        if self is None:
+            return counter
+        if self.left or self.right:
+            counter += 1
+        if self.left:
+            counter += self.left.count_parents()
+        if self.right:
+            counter += self.right.count_parents()
+        return counter
 
     def height(self):
-        pass
+        counter=0
+        if self is None:
+            return counter
+
+        left=0
+        right=0
+        if self.left:
+             left = self.left.height()
+
+        if self.right:
+            right = self.right.height()
+        return max(left, right) + 1
+
+    def shortest_path(self):
+        counter = 0
+        if self is None:
+            return counter
+
+        left=0
+        right=0
+        if self.left:
+            left = self.left.shortest_path()
+
+        if self.right:
+            right = self.right.shortest_path()
+        return min(left, right) + 1
 
     def change_value(self, item, new_value):
-        pass
+        changed = False
+        if not self.data:
+            return changed
+
+        if self.data == item:
+            self.data = new_value
+            changed = True
+            return changed
+        if self.left:
+            self.left.change_value(item, new_value)
+        if self.right:
+            self.right.change_value(item, new_value)
+        return changed
 
     def delete_node(self, item):
         pass
 
     def max_value(self):
-        pass
+        maximum = 0
+        if self is None:
+            return maximum
+
+        if self.data > maximum:
+            maximum = self.data
+        if self.left:
+            maximum = self.left.max_value()
+
+        if self.right:
+            maximum = self.right.max_value()
+        return maximum
 
     def min_value(self):
         minimum = 0
@@ -69,7 +166,15 @@ class BinaryTree:
         return minimum
 
     def length_of_path(self, total_path):
-        pass
+        if self is None:
+            return False
+        if self.data:
+            new_path = total_path - new_path
+        if self.left:
+            self.left.length_of_path(total_path)
+        if self.right:
+            self.right.length_of_path(total_path)
+        return
 
     def tree_string(self):
         string = """
