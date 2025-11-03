@@ -5,13 +5,27 @@ class BinaryTree:
         self.right = None
 
     def preorder(self):
-        pass
+        print(self.data, end=" ")
+        if self.left:
+            self.left.preorder()
+
+        if self.right:
+            self.right.preorder()
 
     def inorder(self):
-        pass
+        if self.left:
+            self.left.inorder()
+        print(self.data, end=" ")
+
+        if self.right:
+            self.right.inorder()
 
     def postorder(self):
-        pass
+        if self.left:
+            self.left.postorder()
+        if self.right:
+            self.right.postorder()
+        print(self.data, end=" ")
 
     def sum_of_nodes(self):
         pass
@@ -41,7 +55,18 @@ class BinaryTree:
         pass
 
     def min_value(self):
-        pass
+        minimum = 0
+        if self is None:
+            return minimum
+
+        if self.data < minimum:
+            minimum = self.data
+
+        if self.left:
+            minimum = self.left.min_value()
+        if self.right:
+            minimum = self.right.min_value()
+        return minimum
 
     def length_of_path(self, total_path):
         pass
@@ -96,23 +121,35 @@ if __name__ == '__main__':
         node_a.preorder()
     except Exception as e:
         print(e)
+    finally:
+        print("\n")
 
     try:
         print("Inorder")
         node_a.inorder()
     except Exception as e:
         print(e)
+    finally:
+        print("\n")
 
     try:
         print("Postorder")
         node_a.postorder()
     except Exception as e:
         print(e)
+    finally:
+        print("\n")
 
     try:
         print("Total = ", node_a.sum_of_nodes())
+        if 439 == node_a.sum_of_nodes():
+            print("Total test correct, OK!")
+        else:
+            print("Total test not correct, Not OK!")
     except Exception as e:
         print(e)
+    finally:
+        print("\n")
 
     try:
         print("Negative nodes = ", node_a.count_negatives())
@@ -136,6 +173,11 @@ if __name__ == '__main__':
 
     try:
         print("Height = ", node_a.height())
+    except Exception as e:
+        print(e)
+
+    try:
+            print("shortest path = ", node_a.shortest_path())
     except Exception as e:
         print(e)
 

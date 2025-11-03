@@ -143,9 +143,7 @@ class Linkedlist:
 
     #__getitem__
     def __getitem__(self, index):
-        if self._head is None:
-            raise IndexError
-        if index < 0 :
+        if self._head is None or index < 0  :
             raise IndexError
 
         count = 0
@@ -155,6 +153,7 @@ class Linkedlist:
                 return current.data
             count += 1
             current = current.link
+        raise IndexError
 
     #__setitem__
     def __setitem__(self, index, new_element):
@@ -271,12 +270,42 @@ class Linkedlist:
         index += 1
     return summan
     '''
+    #99999                                          20
+    #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
+    def swap_data_first_and_last(self):
+        changed = False
+        if self._head is None:
+            raise IndexError
 
-    def change_first_and_last(self, first, last):
-        pass
+        if self._head.link is None:
+            return changed
 
+        current = self._head
+
+        while current.link.link is not None:
+            current = current.link
+        if (self._head.data, current.link.data != current.link.data, self._head.data):
+            self._head.data, current.link.data = current.link.data, self._head.data
+            changed = True
+        return changed
+
+    def remove_repeated(self):
+        #20 -> 30 -> 40 -> 1000 -> 60 -> 10 -> 60 -> 60 -> -100 -> -50 -> 99999 -> 60 -> None
+        change=False
+        current = self._head
+        while current and current.link:
+            if current.data == current.link.data:
+                current.link = current.link.link
+                change = True
+            
+            current = current.link
+        return change
+
+    #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
     def change_mid_to_negative(self, element):
         pass
+
+
 
 
 if __name__ == "__main__":
@@ -458,3 +487,27 @@ if __name__ == "__main__":
             print("sum odd nodes test not OK!")
     except Exception as e:
         print(e)
+
+    try:
+        print("Swap test, ", end="")
+        check = ll.swap_data_first_and_last()
+        if check:
+            print(f"Swap test, {check} OK!")
+        else:
+            print("Swap test not OK!")
+
+    except Exception as e:
+        print(e)
+    finally:
+        ll.print_ll()
+
+    try:
+        check = ll.remove_repeated()
+        if check:
+            print(f"Remove repeated test, {check} not OK!")
+        else:
+            print(f"Remove repeated test, {check} OK!")
+    except Exception as e:
+        print(e)
+    finally:
+        ll.print_ll()
