@@ -120,22 +120,17 @@ class BinaryTree:
         return min(left, right) + 1
 
     def change_value(self, item, new_value):
-        changed = False
-        if not self.data:
-            return changed
-
+        if self.data is None:
+            return False
         if self.data == item:
             self.data = new_value
-            changed = True
-            return changed
+            return True
+        changed = False
         if self.left:
-            self.left.change_value(item, new_value)
+            changed = self.left.change_value(item, new_value)
         if self.right:
-            self.right.change_value(item, new_value)
+            changed = self.right.change_value(item, new_value)
         return changed
-
-    def delete_node(self, item):
-        pass
 
     def max_value(self):
         maximum = 0
@@ -164,17 +159,22 @@ class BinaryTree:
         if self.right:
             minimum = self.right.min_value()
         return minimum
-
-    def length_of_path(self, total_path):
+    def has_path_sum(self, total_path):
         if self is None:
             return False
-        if self.data:
-            new_path = total_path - new_path
-        if self.left:
-            self.left.length_of_path(total_path)
-        if self.right:
-            self.right.length_of_path(total_path)
-        return
+
+        new_path = total_path - self.data
+
+        if new_path == 0 and not self.left and not self.right:
+            return True
+
+        if self.left and self.left.has_path_sum(new_path):
+            return True
+
+        if self.right and self.right.has_path_sum(new_path):
+            return True
+
+        return False
 
     def tree_string(self):
         string = """
@@ -298,16 +298,6 @@ if __name__ == '__main__':
         print(e)
 
     try:
-        value = 100
-        check = node_a.delete_node(value)
-        if check:
-            print("Value deleted, OK!", value)
-        else:
-            print("Value not deleted, Not OK!", value)
-    except Exception as e:
-        print(e)
-
-    try:
         print("Max value so far: ", node_a.max_value())
     except Exception as e:
         print(e)
@@ -318,7 +308,11 @@ if __name__ == '__main__':
         print(e)
 
     try:
-        path = 100
-        node_a.length_of_path(path)
+        path = 200
+        check = node_a.has_path_sum(path)
+        if check:
+            print("Path sum changed, OK!")
+        else:
+            print("Path not changed, Not OK!")
     except Exception as e:
         print(e)

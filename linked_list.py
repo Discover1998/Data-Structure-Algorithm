@@ -16,34 +16,39 @@ class Linkedlist:
     def add_last(self, item):
         if self._head is None:
             self.add_first(item)
+            return self._head
         node = self._head
         while node.link is not None:
             node = node.link
         node.link = Node(item)
+        return self._head
 
     #remove_first
     def remove_first(self):
-        if self._head is None:
-            raise IndexError
         if self._head is not None:
             data = self._head.data
             self._head = self._head.link
             return data
+        raise IndexError
 
     #remove_last
     def remove_last(self):
         if self._head is None:
             raise IndexError
+
+        # single node
         if self._head.link is None:
             data = self._head.data
             self._head = None
             return data
-        current = self._head
-        while self._head.link.link is not None:
-            current = current.link
-        data_l = self._head.link.data
-        self._head.link = None
-        return data_l
+
+        prev = self._head
+        while prev.link.link is not None:
+            prev = prev.link
+
+        data = prev.link.data
+        prev.link = None
+        return data
 
     #sum_data
     def sum_data(self):
@@ -95,10 +100,9 @@ class Linkedlist:
     def reverse_ll(self):
         if self._head is None:
             return None
+
         previous = None
         current = self._head
-        #after = current.link
-
         while current is not None:
             after = current.link
             current.link, previous, current = previous, current, after
@@ -117,6 +121,102 @@ class Linkedlist:
                 change = True
             cur = cur.link
         return change
+
+    def sum_even_nodes(self):
+        total = 0
+        if self._head is None:
+            return total
+
+        current = self._head
+        index_of_nodes = 0
+        while current is not None:
+            if index_of_nodes % 2 == 0:
+                total += current.data
+            current = current.link
+            index_of_nodes += 1
+        return total
+
+    def sum_odd_nodes(self):
+        #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
+        total = 0
+        if self._head is None:
+            return total
+
+        current = self._head
+        index_of_nodes = 0
+        while current is not None:
+            if index_of_nodes % 2 == 1:
+                total += current.data
+            current = current.link
+            index_of_nodes += 1
+        return total
+
+    def swap_data_first_and_last(self):
+        #99999                                          20
+        #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
+        changed = False
+        if self._head is None:
+            raise IndexError
+
+        if self._head.link is None:
+            return changed
+
+        current = self._head
+
+        while current.link.link is not None:
+            current = current.link
+        if (self._head.data, current.link.data != current.link.data, self._head.data):
+            self._head.data, current.link.data = current.link.data, self._head.data
+            changed = True
+        return changed
+
+    def remove_repeated(self):
+        #20 -> 30 -> 40 -> 1000 -> 60 -> 10 -> 60 -> 60 -> -100 -> -50 -> 99999 -> 60 -> None
+        change=False
+        current = self._head
+        while current and current.link:
+            if current.data == current.link.data:
+                current.link = current.link.link
+                change = True
+
+            current = current.link
+        return change
+
+    def change_mid_to_negative(self, element):
+        #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
+        if self._head is None:
+            return False
+
+        index = 0
+        current = self._head
+        while current is not None:
+            current = current.link
+            index += 1
+
+        index = index // 2
+
+        current = self._head
+        current_index = 0
+        while current is not None:
+            if current_index == index:
+                current.data = element
+                return True
+            current_index += 1
+            current = current.link
+        raise ValueError
+
+    def print_ll(self):
+        if self._head is None:
+            return "None"
+        current = self._head
+        while current is not None:
+            print(current.data, end=' -> ')
+            current = current.link
+        print("None")
+
+    """
+    Magic Methods
+    """
 
     #__contains__
     def __contains__(self, item):
@@ -169,7 +269,7 @@ class Linkedlist:
             node = node.link
         raise IndexError
 
-    #iter
+    #Generator-based iterator
     def __iter__(self):
         if self._head is None:
             return None
@@ -178,22 +278,8 @@ class Linkedlist:
             yield current.data
             current = current.link
 
-    #iter with next
+    #iterator
     def __iter__(self):
-        #def __iter__(self):
-        #return LinkedListIterator(self._head)
-        '''class LinkedListIterator:
-                def __init__(self, head):
-                       self._current = head
-                def __iter__(self, item):
-                      return self
-                def __next__(self):
-                    if self._current is None:
-                         raise StopIteration
-                    else:
-                        data = self._current.data
-                        self._current = self._current.link
-                    return data'''
         self._current = self._head
         return self
 
@@ -217,93 +303,6 @@ class Linkedlist:
         texet += "None"
         return texet
 
-    def print_ll(self):
-        if self._head is None:
-            print("None")
-            return
-        current = self._head
-        while current is not None:
-            print(current.data, end="->")
-            current = current.link
-        print("None")
-        return
-
-    def sum_even_nodes(self):
-        total = 0
-        if self._head is None:
-            return total
-
-        current = self._head
-        index_of_nodes = 0
-        while current is not None:
-            if index_of_nodes % 2 == 0:
-                total += current.data
-            current = current.link
-            index_of_nodes += 1
-        return total
-
-    #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
-    def sum_odd_nodes(self):
-        total = 0
-        if self._head is None:
-            return total
-
-        current = self._head
-        index_of_nodes = 0
-        while current is not None:
-            if index_of_nodes % 2 == 1:
-                total += current.data
-            current = current.link
-            index_of_nodes += 1
-        return total
-
-    '''
-    summan = 0
-    index = 0
-    #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
-    #0           2             4              6
-    current = self._head
-    while current is not None:
-        if index % 2 == 0:
-            summan += current.data
-        current = current.link
-        index += 1
-    return summan
-    '''
-    #99999                                          20
-    #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
-    def swap_data_first_and_last(self):
-        changed = False
-        if self._head is None:
-            raise IndexError
-
-        if self._head.link is None:
-            return changed
-
-        current = self._head
-
-        while current.link.link is not None:
-            current = current.link
-        if (self._head.data, current.link.data != current.link.data, self._head.data):
-            self._head.data, current.link.data = current.link.data, self._head.data
-            changed = True
-        return changed
-
-    def remove_repeated(self):
-        #20 -> 30 -> 40 -> 1000 -> 60 -> 10 -> 60 -> 60 -> -100 -> -50 -> 99999 -> 60 -> None
-        change=False
-        current = self._head
-        while current and current.link:
-            if current.data == current.link.data:
-                current.link = current.link.link
-                change = True
-            
-            current = current.link
-        return change
-
-    #20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None
-    def change_mid_to_negative(self, element):
-        pass
 
 
 
@@ -431,8 +430,8 @@ if __name__ == "__main__":
         print(e)
 
     try:
-        elem=7
-        new_val=99999
+        elem = 2
+        new_val = 9999
         currently = ll.__setitem__(elem, new_val)
         if currently:
             print("setitem test, item has been updated, ok!")
@@ -440,6 +439,8 @@ if __name__ == "__main__":
             print("setitem test, item has not updated, not ok!")
     except Exception as e:
         print(e)
+    finally:
+        ll.print_ll()
 
     try:
         pos = 3
@@ -461,7 +462,7 @@ if __name__ == "__main__":
         print(e)
 
     try:
-        correct_str = "20 -> 30 -> 40 -> 1000 -> 60 -> -100 -> -50 -> 99999 -> None"
+        correct_str = "20 -> 30 -> 9999 -> 1000 -> 60 -> -100 -> -50 -> None"
         result = ll.__str__()
         if result == correct_str:
             print("String test, OK!")
@@ -472,7 +473,7 @@ if __name__ == "__main__":
 
     try:
         check = ll.sum_even_nodes()
-        if check == 70:
+        if check == 10029:
             print(f"sum even nodes test, {check} OK!")
         else:
             print("sum even nodes test not OK!")
@@ -480,8 +481,9 @@ if __name__ == "__main__":
         print(e)
 
     try:
+        ll.print_ll()
         test = ll.sum_odd_nodes()
-        if test == 100929:
+        if test == 930:
             print(f"sum odd nodes test, {test} OK!")
         else:
             print("sum odd nodes test not OK!")
@@ -507,6 +509,17 @@ if __name__ == "__main__":
             print(f"Remove repeated test, {check} not OK!")
         else:
             print(f"Remove repeated test, {check} OK!")
+    except Exception as e:
+        print(e)
+    finally:
+        ll.print_ll()
+
+    try:
+        check = ll.change_mid_to_negative(-1000)
+        if check:
+            print(f"Change mid to negative test, {check}  OK!")
+        else:
+            print(f"Change mid to negative test, {check} not OK!")
     except Exception as e:
         print(e)
     finally:
